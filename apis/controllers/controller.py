@@ -21,6 +21,8 @@ async def answer(image_file: UploadFile = File(..., description="Image file to e
         # Read the image file content and save into tmp folder 
         request_object_content = await image_file.read()
         image_content = Image.open(io.BytesIO(request_object_content))
+        if not os.path.exists('tmp'):
+            os.makedirs('tmp')
         image_path = f'tmp/{image_file.filename}'
         image_content.save(image_path)
 

@@ -14,7 +14,7 @@ class Services():
                             display_name="image")
 
         response = model.generate_content(["""
-            Perform OCR on the image and extract the text from it.""", 
+            Perform OCR on the image. Do not miss any text.""", 
             uploaded_file
         ])
 
