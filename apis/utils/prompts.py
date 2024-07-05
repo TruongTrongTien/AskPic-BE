@@ -1,6 +1,6 @@
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 
-system_message_prompt_template = SystemMessagePromptTemplate.from_template("""
+ask_by_images_system_message_prompt_template = SystemMessagePromptTemplate.from_template("""
 You are an expert in answering questions. 
 Your task is to extract the questions from the following text and answer them.
 The given text might include redundant information, you must focus only on the questions.
@@ -47,12 +47,19 @@ You MUST ONLY respond a string using this format:
         ]
     }}
 """)
-human_message_prompt_template = HumanMessagePromptTemplate.from_template("""
+ask_by_images_human_message_prompt_template = HumanMessagePromptTemplate.from_template("""
 This is the text you need to extract questions from and answer: {text}
 """)
 
-prompt_template = ChatPromptTemplate.from_messages(
+ask_by_images_prompt_template = ChatPromptTemplate.from_messages(
     [
-    system_message_prompt_template, human_message_prompt_template
+    ask_by_images_system_message_prompt_template, ask_by_images_human_message_prompt_template
+    ]
+)
+
+ask_in_documents_prompt_template = ChatPromptTemplate.from_messages(
+    [
+    SystemMessagePromptTemplate.from_template("You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know."),
+    HumanMessagePromptTemplate.from_template("Question: {question}. Context: {context}")
     ]
 )
