@@ -163,7 +163,8 @@ cython_debug/
 
 
 # Delete this later
-images/
+assets/
 test.py
 scrap.txt
 ocr_gemini.ipynb
+askpic-firebase-adminsdk-c9308-cf483cd516.json
