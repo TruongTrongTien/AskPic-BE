@@ -1,9 +1,9 @@
 import google.generativeai as genai
 from apis.configs.genai_configs import model
-from apis.configs.llm_configs import llm, parser
-from apis.utils.prompts import prompt_template
+from apis.configs.llm_configs import llm, json_parser
+from apis.utils.prompts import ask_by_images_prompt_template
 
-class Services():
+class AskByImagesServices():
 
     def __init__(self) -> None:
         pass
@@ -27,7 +27,7 @@ class Services():
     @staticmethod
     async def get_answers(questions: str):
 
-        chain = prompt_template | llm | parser
+        chain = ask_by_images_prompt_template | llm | json_parser
 
         response = chain.invoke({"text": questions})
 
