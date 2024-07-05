@@ -6,12 +6,13 @@ from fastapi import APIRouter, UploadFile, File
 from PIL import Image
 
 from apis.schemas.base import GenericResponseModel
-from apis.services.services import Services
+from apis.services.ask_by_images_services import AskByImagesServices
 
-askpic_router = APIRouter(prefix="/apis", tags=["AskPic"])
+ask_by_images_router = APIRouter(prefix="/apis/ask_by_images", tags=["Ask By Images"])
 
-@askpic_router.post("/answer", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
-async def answer(image_file: UploadFile = File(..., description="Image file to extract questions from")):
+
+@ask_by_images_router.post("/ask", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
+async def answer(image_file: UploadFile = File(..., description="Upload the image file to extract questions from")):
     
     try:
         # Check if the file is an image
@@ -27,9 +28,9 @@ async def answer(image_file: UploadFile = File(..., description="Image file to e
         image_content.save(image_path)
 
         # Extract questions from the image and get answers
-        services = Services()
-        questions = services.get_questions(image_path)
-        answers = await services.get_answers(questions)
+        services = AskByImagesServices()
+        questions = services.get_questions(image_path=image_path)
+        answers = await services.get_answers(questions=questions)
         
         # Delete the image file in tmp folder
         os.remove(image_path)
