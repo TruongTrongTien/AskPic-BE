@@ -8,11 +8,12 @@ from fastapi.exceptions import RequestValidationError
 from pydantic import ValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
-from apis.controllers.controller import askpic_router
+from apis.controllers.ask_by_images_controller import ask_by_images_router
+from apis.controllers.ask_in_documents_controller import ask_in_documents_router
 
 app = FastAPI()
 app.title = "AskPic API Service"
-app.version = "0.0.1"     
+app.version = "0.0.2"     
 
 # Set up CORS middleware
 app.add_middleware(
@@ -28,7 +29,8 @@ app.add_middleware(
 def message():
     return HTMLResponse('<h1>AskPic API Service</h1>')
 
-app.include_router(askpic_router)
+app.include_router(ask_by_images_router)
+app.include_router(ask_in_documents_router)
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=7860, reload=True)
