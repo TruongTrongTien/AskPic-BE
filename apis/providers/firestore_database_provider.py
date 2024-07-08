@@ -13,6 +13,10 @@ class FirestoreDatabaseProvider:
         doc_ref = self.db.collection(self.collection_name).document(document_id).get()
         return doc_ref.to_dict()
     
+    def read_all_documents(self):
+        docs = self.db.collection(self.collection_name).stream()
+        return [doc.to_dict() for doc in docs]
+    
     def update_document(self, document_id, data):
         try:
             self.db.collection(self.collection_name).document(document_id).update(data)

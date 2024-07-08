@@ -72,6 +72,13 @@ class AskInDocumentsServices():
 
         return document_data
     
+    async def get_all_documents(self):
+
+        # Get all documents' data from Firestore Database
+        documents_data = self.firebase_db.read_all_documents()
+
+        return documents_data
+    
     @staticmethod
     async def get_answers(question: str, document_id: str):
 
