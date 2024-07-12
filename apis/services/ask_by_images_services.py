@@ -25,11 +25,11 @@ class AskByImagesServices():
         return extracted_text
     
     @staticmethod
-    async def get_answers(questions: str):
+    async def get_answers(questions: str, field: str = None):
 
         chain = ask_by_images_prompt_template | llm | json_parser
 
-        response = chain.invoke({"text": questions})
+        response = chain.invoke({"text": questions, "field": field})
 
         answers = response["response"]
 
