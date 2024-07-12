@@ -1,7 +1,8 @@
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 
 ask_by_images_system_message_prompt_template = SystemMessagePromptTemplate.from_template("""
-You are an expert in answering questions. 
+You are an expert in answering questions.
+Your field of expertise is {field}.
 Your task is to extract the questions from the following text and answer them.
 The given text might include redundant information, you must focus only on the questions.
 The questions are divided into many sections. 
@@ -21,8 +22,8 @@ The questions are divided into many sections.
             Questions: 
                 Keep the original questions. 
                 You must include options to the questions if it is a multiple-choice question. 
-                Each option is written in a separate line, 
-                You must replace any bullets by (A,B,C,D) or (1,2,3,4) or (I,II,III,IV).
+                Each option is written in a separate line.
+                You must replace any bullets by capital letters (A, B, C, D, etc.) or numbers (1, 2, 3, 4, etc.) or Roman numerals (I, II, III, IV, etc.).
                 For example:
                     Question 1
                     A. Option 1
@@ -59,7 +60,15 @@ ask_by_images_prompt_template = ChatPromptTemplate.from_messages(
 
 ask_in_documents_prompt_template = ChatPromptTemplate.from_messages(
     [
-    SystemMessagePromptTemplate.from_template("You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know."),
+    SystemMessagePromptTemplate.from_template(
+        """
+        You are an intelligent assistant specializing in question-answering tasks.
+        Your task is using the provided context to answer the question accurately.
+        If the exact question or answer is not found in the context, rephrase or provide the closest possible information from the context without fabricating details.
+        If you don't know the answer, clearly state that the information is not available in the provided context.
+        Keep the answer concise and as specific and detailed as possible.
+        You must never make assumptions.
+        """),
     HumanMessagePromptTemplate.from_template("Question: {question}. Context: {context}")
     ]
 )
