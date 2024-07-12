@@ -13,7 +13,7 @@ from apis.controllers.ask_in_documents_controller import ask_in_documents_router
 
 app = FastAPI()
 app.title = "AskPic API Service"
-app.version = "0.0.2"     
+app.version = "0.0.2"
 
 # Set up CORS middleware
 app.add_middleware(
