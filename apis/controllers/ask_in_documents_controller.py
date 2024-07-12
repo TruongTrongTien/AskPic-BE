@@ -2,7 +2,7 @@ import http
 import os
 from uuid import uuid4
 
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Form
 
 from apis.schemas.base import GenericResponseModel
 from apis.services.ask_in_documents_services import AskInDocumentsServices
@@ -79,7 +79,8 @@ async def get_all_documents():
             return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
     
 @ask_in_documents_router.post("/ask", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
-async def ask_in_document(question: str, document_id: str):
+async def ask_in_document(question: str = Form(..., description="Enter your question"), 
+                        document_id: str = Form(..., description="Enter the document ID")):
     
     try:
         services = AskInDocumentsServices()
