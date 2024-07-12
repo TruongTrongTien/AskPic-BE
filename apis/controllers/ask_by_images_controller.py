@@ -2,7 +2,7 @@ import http
 import io
 import os
 
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Form
 from PIL import Image
 
 from apis.schemas.base import GenericResponseModel
@@ -12,8 +12,8 @@ ask_by_images_router = APIRouter(prefix="/apis/ask_by_images", tags=["Ask By Ima
 
 
 @ask_by_images_router.post("/ask", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
-async def answer(image_file: UploadFile = File(..., description="Upload the image file to extract questions from")):
-    
+async def ask(image_file: UploadFile = File(..., description="Upload the image file to extract questions from"),
+            field: str = Form(..., description="Enter the field of the questions", example="English Language")):
     try:
         # Check if the file is an image
         if image_file.filename.split('.')[-1] not in ['jpg', 'jpeg', 'png']:
@@ -30,7 +30,7 @@ async def answer(image_file: UploadFile = File(..., description="Upload the imag
         # Extract questions from the image and get answers
         services = AskByImagesServices()
         questions = services.get_questions(image_path=image_path)
-        answers = await services.get_answers(questions=questions)
+        answers = await services.get_answers(questions=questions, field=field)
         
         # Delete the image file in tmp folder
         os.remove(image_path)
