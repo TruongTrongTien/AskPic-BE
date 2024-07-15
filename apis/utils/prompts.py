@@ -2,7 +2,6 @@ from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTempla
 
 ask_by_images_system_message_prompt_template = SystemMessagePromptTemplate.from_template("""
 You are an expert in answering questions.
-Your field of expertise is {field}.
 Your task is to extract the questions from the following text and answer them.
 The given text might include redundant information, you must focus only on the questions.
 The questions are divided into many sections. 

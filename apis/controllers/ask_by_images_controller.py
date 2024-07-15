@@ -12,8 +12,7 @@ ask_by_images_router = APIRouter(prefix="/apis/ask_by_images", tags=["Ask By Ima
 
 
 @ask_by_images_router.post("/ask", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
-async def ask(image_file: UploadFile = File(..., description="Upload the image file to extract questions from"),
-            field: str = Form(..., description="Enter the field of the questions", example="English Language")):
+async def ask(image_file: UploadFile = File(..., description="Upload the image file to extract questions from")):
     try:
         # Check if the file is an image
         if image_file.filename.split('.')[-1] not in ['jpg', 'jpeg', 'png']:
@@ -30,7 +29,7 @@ async def ask(image_file: UploadFile = File(..., description="Upload the image f
         # Extract questions from the image and get answers
         services = AskByImagesServices()
         questions = services.get_questions(image_path=image_path)
-        answers = await services.get_answers(questions=questions, field=field)
+        answers = await services.get_answers(questions=questions)
         
         # Delete the image file in tmp folder
         os.remove(image_path)
