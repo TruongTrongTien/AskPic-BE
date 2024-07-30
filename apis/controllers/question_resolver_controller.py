@@ -66,13 +66,3 @@ async def ask_by_text(text: str = Form(..., description="Enter your questions"))
         return GenericResponseModel(data=answers, status_code=http.HTTPStatus.OK, message="Questions answered successfully")
     except Exception as e:
         return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
-    
-@question_resolver_router.post("/get_feedback", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
-async def get_feedback(qa: str = Form(..., description="Enter the questions and answers")):
-    try:
-        services = AskByImagesServices()
-        feedback = await services.get_feedback(qa=qa)
-        
-        return GenericResponseModel(data=feedback, status_code=http.HTTPStatus.OK, message="Feedback generated successfully")
-    except Exception as e:
-        return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
