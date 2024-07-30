@@ -5,12 +5,12 @@ from uuid import uuid4
 from fastapi import APIRouter, UploadFile, File, Form
 
 from apis.schemas.base import GenericResponseModel
-from apis.services.ask_in_documents_services import AskInDocumentsServices
+from apis.services.information_extractor_services import AskInDocumentsServices
 
-ask_in_documents_router = APIRouter(prefix="/apis/ask_in_documents", tags=["Ask In Documents"])
+information_extractor_router = APIRouter(prefix="/apis/information_extractor", tags=["Information Extractor"])
 
 
-@ask_in_documents_router.post("/upload_document", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
+@information_extractor_router.post("/upload_document", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
 async def upload_document(document_file: UploadFile = File(..., description="Upload document for reference")):
         
         try:
@@ -41,7 +41,7 @@ async def upload_document(document_file: UploadFile = File(..., description="Upl
             return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
 
 
-@ask_in_documents_router.delete("/delete_document", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
+@information_extractor_router.delete("/delete_document", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
 async def delete_document(document_id: str):
     
     try:
@@ -54,7 +54,7 @@ async def delete_document(document_id: str):
         return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
 
 
-@ask_in_documents_router.get("/get_document/{document_id}", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
+@information_extractor_router.get("/get_document/{document_id}", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
 async def get_document(document_id: str):
     
     try:
@@ -66,20 +66,20 @@ async def get_document(document_id: str):
     except Exception as e:
         return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
     
-@ask_in_documents_router.get("/get_all_documents", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
+@information_extractor_router.get("/get_all_documents", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
 async def get_all_documents():
         
-        try:
-            services = AskInDocumentsServices()
-            documents = await services.get_all_documents()
-            
-            return GenericResponseModel(data=documents, status_code=http.HTTPStatus.OK, message="Documents retrieved successfully")
+    try:
+        services = AskInDocumentsServices()
+        documents = await services.get_all_documents()
         
-        except Exception as e:
-            return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
+        return GenericResponseModel(data=documents, status_code=http.HTTPStatus.OK, message="Documents retrieved successfully")
     
-@ask_in_documents_router.post("/ask", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
-async def ask_in_document(question: str = Form(..., description="Enter your question"), 
+    except Exception as e:
+        return GenericResponseModel(error=str(e), status_code=http.HTTPStatus.INTERNAL_SERVER_ERROR, message="An error occurred")
+    
+@information_extractor_router.post("/ask", status_code=http.HTTPStatus.OK, response_model=GenericResponseModel)
+async def information_extractor(question: str = Form(..., description="Enter your question"), 
                         document_id: str = Form(..., description="Enter the document ID")):
     
     try:
