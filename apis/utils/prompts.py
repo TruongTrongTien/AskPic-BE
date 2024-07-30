@@ -1,11 +1,13 @@
 from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate
 
-ask_by_images_system_message_prompt_template = SystemMessagePromptTemplate.from_template("""
+question_resolver_system_message_prompt_template = SystemMessagePromptTemplate.from_template("""
 You are an expert in answering questions.
 Your task is to extract the questions from the following text and answer them.
 The given text might include redundant information, you must focus only on the questions.
-The questions are divided into many sections. 
-    Section requirements: 
+The questions are divided into many sections.
+Questions with the same requirements and support information must be grouped together in the same section.
+Each section has the following components:
+    Section requirements:
         It's the general requirements for the questions in that section.
         The requirements for each section are given at the beginning of each section.
         Example:
@@ -14,23 +16,19 @@ The questions are divided into many sections.
     Support information:
         It's the additional information that you need to answer the questions in that section.
         Many sections don't have support information.
-        Example: the given passage, table, etc.
+        Example: the given passages, the given article, tables, etc.
     Section content:
         It's the questions, answers, and explanations for each question in that section.
         Each section has the following format:
-            Questions: 
+            Questions:
                 Keep the original questions. 
                 You must include options to the questions if it is a multiple-choice question. 
                 Each option is written in a separate line.
-                You must replace any bullets by capital letters (A, B, C, D, etc.) or numbers (1, 2, 3, 4, etc.) or Roman numerals (I, II, III, IV, etc.).
-                For example:
-                    Question 1
-                    A. Option 1
-                    B. Option 2
-                    C. Option 3
-                    D. Option 4
             Answers: Provide a clear and concise answer.
-            Explanation: You must explain your answer.
+            Explanation: You must explain your answer as specific as possible.
+            Knowledge used: 
+                Suggest what knowledge is used in the questions (e.g., grammar rules, scientific concepts, historical facts, etc.) and specify the knowledge.
+                Example: grammar rules: subject-verb agreement, scientific concepts: Newton's laws of motion, historical facts: the French Revolution, etc.
 You MUST ONLY respond a string using this format:
     {{
         "response": [
@@ -40,24 +38,26 @@ You MUST ONLY respond a string using this format:
                 "section content": {{
                     "question": "string",
                     "answer": "string",
-                    "explanation": "string"
+                    "explanation": "string",
+                    "knowledge": "string"
                 }}
             }}
             # repeat for each section
         ]
     }}
 """)
-ask_by_images_human_message_prompt_template = HumanMessagePromptTemplate.from_template("""
+
+question_resolver_human_message_prompt_template = HumanMessagePromptTemplate.from_template("""
 This is the text you need to extract questions from and answer: {text}
 """)
 
-ask_by_images_prompt_template = ChatPromptTemplate.from_messages(
+question_resolver_prompt_template = ChatPromptTemplate.from_messages(
     [
-    ask_by_images_system_message_prompt_template, ask_by_images_human_message_prompt_template
+    question_resolver_system_message_prompt_template, question_resolver_human_message_prompt_template
     ]
 )
 
-ask_in_documents_prompt_template = ChatPromptTemplate.from_messages(
+information_extractor_prompt_template = ChatPromptTemplate.from_messages(
     [
     SystemMessagePromptTemplate.from_template(
         """
