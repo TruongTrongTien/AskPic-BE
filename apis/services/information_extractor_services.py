@@ -3,7 +3,7 @@ from apis.providers.firestore_database_provider import FirestoreDatabaseProvider
 from apis.providers.qdrant_provider import QdrantProvider
 from apis.utils.rag import load_documents, split_text
 from apis.configs.llm_configs import llm, json_parser, str_parser
-from apis.utils.prompts import ask_in_documents_prompt_template
+from apis.utils.prompts import information_extractor_prompt_template
 
 from langchain_core.runnables import RunnablePassthrough
 
@@ -90,7 +90,7 @@ class AskInDocumentsServices():
         retriever = qdrant_db.create_retriever()
 
         # Get answers
-        chain = ask_in_documents_prompt_template | llm | str_parser
+        chain = information_extractor_prompt_template | llm | str_parser
         rag_chain = (
             {"context": retriever, "question": RunnablePassthrough()} | chain
         )
